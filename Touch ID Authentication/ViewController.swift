@@ -7,18 +7,37 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var resultLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        let authContext = LAContext()
+        
+        var error: NSError?
+        
+        if authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            
+            authContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "To check if it's really you!", reply: { (success, error) in
+                
+                if success {
+                    self.resultLabel.text = "Result: Verified"
+                } else {
+                    self.resultLabel.text = "Result: Not Verified"
+                }
+                
+                
+            })
+            
+            
+        }
+        
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+
 
 
 }
